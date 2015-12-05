@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+function main {
+  case "$1" in
+    build)
+      packer build -var-file=osx1011.json --only=virtualbox-iso osx.json
+      ;;
+  esac
+}
+
+source sub "$BASH_SOURCE" "$@"
