@@ -1,9 +1,0 @@
-{
-  "vm_name": "osx1011",
-  "cpus": "1",
-  "disk_size": "64000",
-  "iso_url": "dmg/OSX_InstallESD_10.11.1_15B42.dmg",
-  "memory": "2048",
-  "vagrantfile_template": "",
-  "virtualbox_guest_os_type": "MacOS1011_64"
-}

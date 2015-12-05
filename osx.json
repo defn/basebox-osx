@@ -69,7 +69,7 @@
     "headless": "true",
     "install_vagrant_keys": "true",
     "install_xcode_cli_tools": "true",
-    "iso_url": "dmg/OSX_InstallESD_10.11_15A284.dmg",
+    "iso_url": "dmg/OSX_InstallESD_10.11.1_15B42.dmg",
     "memory": "2048",
     "ssh_password": "ubuntu",
     "ssh_username": "ubuntu",
@@ -79,4 +79,3 @@
     "virtualbox_guest_os_type": "MacOS1011_64"
   }
 }
-
