@@ -1,9 +1,0 @@
-{
-  "vm_name": "osx1011-desktop",
-  "cpus": "1",
-  "disk_size": "62536",
-  "iso_url": "dmg/OSX_InstallESD_10.11_15A284.dmg",
-  "memory": "2048",
-  "vagrantfile_template": "tpl/vagrantfile-osx1011-desktop.tpl",
-  "virtualbox_guest_os_type": "MacOS1011_64"
-}
