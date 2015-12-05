@@ -146,26 +146,11 @@ if [ -d "$ESD" ]; then
 	fi
 fi
 
-VEEWEE_DIR="$(cd "$SCRIPT_DIR/../../../"; pwd)"
-VEEWEE_UID=$(/usr/bin/stat -f %u "$VEEWEE_DIR")
-VEEWEE_GID=$(/usr/bin/stat -f %g "$VEEWEE_DIR")
 DEFINITION_DIR="$(cd "$SCRIPT_DIR/.."; pwd)"
 
 if [ "$2" = "" ]; then
     msg_error "Currently an explicit output directory is required as the second argument."
 	exit 1
-	# The rest is left over from the old prepare_veewee_iso.sh script. Not sure if we
-    # should leave in this functionality to automatically locate the veewee directory.
-	DEFAULT_ISO_DIR=1
-	OLDPWD=$(pwd)
-	cd "$SCRIPT_DIR"
-	# default to the veewee/iso directory
-	if [ ! -d "../../../iso" ]; then
-		mkdir "../../../iso"
-		chown $VEEWEE_UID:$VEEWEE_GID "../../../iso"
-	fi
-	OUT_DIR="$(cd "$SCRIPT_DIR"; cd ../../../iso; pwd)"
-	cd "$OLDPWD" # Rest of script depends on being in the working directory if we were passed relative paths
 else
 	OUT_DIR="$2"
 fi
