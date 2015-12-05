@@ -55,8 +55,8 @@
       "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E -S bash '{{ .Path }}'",
       "scripts": [
         "script/ubuntu.sh",
-        "script/xcode-cli-tools.sh",
-        "script/add-network-interface-detection.sh",
+        "script/xcode.sh",
+        "script/network.sh",
         "script/update.sh",
         "script/minimize.sh"
       ],
