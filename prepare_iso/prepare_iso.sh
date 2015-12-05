@@ -271,27 +271,20 @@ msg_status "Restoring ('asr restore') the BaseSystem to the read-write DMG.."
 asr restore --source "$BASE_SYSTEM_DMG" --target "$MNT_BASE_SYSTEM" --noprompt --noverify --erase
 rm -r "$MNT_BASE_SYSTEM"
 
-if [ $DMG_OS_VERS_MAJOR -ge 9 ]; then
-    MNT_BASE_SYSTEM="/Volumes/OS X Base System"
-    BASESYSTEM_OUTPUT_IMAGE="$OUTPUT_DMG"
-    PACKAGES_DIR="$MNT_BASE_SYSTEM/System/Installation/Packages"
+MNT_BASE_SYSTEM="/Volumes/OS X Base System"
+BASESYSTEM_OUTPUT_IMAGE="$OUTPUT_DMG"
+PACKAGES_DIR="$MNT_BASE_SYSTEM/System/Installation/Packages"
 
-    rm "$PACKAGES_DIR"
-	msg_status "Moving 'Packages' directory from the ESD to BaseSystem.."
-	mv -v "$MNT_ESD/Packages" "$MNT_BASE_SYSTEM/System/Installation/"
+rm "$PACKAGES_DIR"
+msg_status "Moving 'Packages' directory from the ESD to BaseSystem.."
+mv -v "$MNT_ESD/Packages" "$MNT_BASE_SYSTEM/System/Installation/"
 
-	# This isn't strictly required for Mavericks, but Yosemite will consider the
-	# installer corrupt if this isn't included, because it cannot verify BaseSystem's
-	# consistency and perform a recovery partition verification
-	msg_status "Copying in original BaseSystem dmg and chunklist.."
-	cp "$MNT_ESD/BaseSystem.dmg" "$MNT_BASE_SYSTEM/"
-	cp "$MNT_ESD/BaseSystem.chunklist" "$MNT_BASE_SYSTEM/"
-else
-    MNT_BASE_SYSTEM="/Volumes/Mac OS X Base System"
-    BASESYSTEM_OUTPUT_IMAGE="$MNT_ESD/BaseSystem.dmg"
-    rm "$BASESYSTEM_OUTPUT_IMAGE"
-	PACKAGES_DIR="$MNT_ESD/Packages"
-fi
+# This isn't strictly required for Mavericks, but Yosemite will consider the
+# installer corrupt if this isn't included, because it cannot verify BaseSystem's
+# consistency and perform a recovery partition verification
+msg_status "Copying in original BaseSystem dmg and chunklist.."
+cp "$MNT_ESD/BaseSystem.dmg" "$MNT_BASE_SYSTEM/"
+cp "$MNT_ESD/BaseSystem.chunklist" "$MNT_BASE_SYSTEM/"
 
 msg_status "Adding automated components.."
 CDROM_LOCAL="$MNT_BASE_SYSTEM/private/etc/rc.cdrom.local"
@@ -306,21 +299,11 @@ rm -rf "$SUPPORT_DIR/tmp"
 msg_status "Unmounting BaseSystem.."
 hdiutil detach "$MNT_BASE_SYSTEM"
 
-if [ $DMG_OS_VERS_MAJOR -lt 9 ]; then
-	msg_status "Pre-Mavericks we save back the modified BaseSystem to the root of the ESD."
-	hdiutil convert -format UDZO -o "$MNT_ESD/BaseSystem.dmg" "$BASE_SYSTEM_DMG_RW"
-fi
-
 msg_status "Unmounting ESD.."
 hdiutil detach "$MNT_ESD"
 
-if [ $DMG_OS_VERS_MAJOR -ge 9 ]; then
-	msg_status "On Mavericks and later, the entire modified BaseSystem is our output dmg."
-	hdiutil convert -format UDZO -o "$OUTPUT_DMG" "$BASE_SYSTEM_DMG_RW"
-else
-	msg_status "Pre-Mavericks we're modifying the original ESD file."
-	hdiutil convert -format UDZO -o "$OUTPUT_DMG" -shadow "$SHADOW_FILE" "$ESD"
-fi
+msg_status "On Mavericks and later, the entire modified BaseSystem is our output dmg."
+hdiutil convert -format UDZO -o "$OUTPUT_DMG" "$BASE_SYSTEM_DMG_RW"
 rm -rf "$MNT_ESD" "$SHADOW_FILE"
 
 if [ -n "$SUDO_UID" ] && [ -n "$SUDO_GID" ]; then
