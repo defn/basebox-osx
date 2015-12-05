@@ -10,7 +10,7 @@ function main {
       prepare_iso/prepare_iso.sh /Applications/Install\ OS\ X\ El\ Capitan.app dmg
       ;;
     build)
-      packer build -var-file=osx1011.json --only=virtualbox-iso osx.json
+      packer build --only=vmware-iso osx.json
       ;;
   esac
 }

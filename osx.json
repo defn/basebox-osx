@@ -1,41 +1,69 @@
 {
-  "_command": "Build with `packer build osx.json`",
   "builders": [
-    {
-      "boot_wait": "2s",
-      "disk_size": "{{ user `disk_size` }}",
-      "guest_additions_mode": "disable",
-      "guest_os_type": "{{ user `virtualbox_guest_os_type` }}",
-      "hard_drive_interface": "sata",
-      "headless": "{{ user `headless` }}",
-      "iso_checksum_type": "none",
-      "iso_interface": "sata",
-      "iso_url": "{{ user `iso_url` }}",
-      "output_directory": "output-{{ user `vm_name` }}-virtualbox-iso",
-      "shutdown_command": "echo '{{ user `ssh_username` }}'|sudo -S shutdown -h now",
-      "ssh_password": "{{ user `ssh_password` }}",
-      "ssh_port": 22,
-      "ssh_username": "{{ user `ssh_username` }}",
-      "ssh_wait_timeout": "10000s",
-      "type": "virtualbox-iso",
-      "vboxmanage": [
-        [ "modifyvm", "{{.Name}}", "--audiocontroller", "hda" ],
-        [ "modifyvm", "{{.Name}}", "--boot1", "dvd" ],
-        [ "modifyvm", "{{.Name}}", "--boot2", "disk" ],
-        [ "modifyvm", "{{.Name}}", "--chipset", "ich9" ],
-        [ "modifyvm", "{{.Name}}", "--firmware", "efi" ],
-        [ "modifyvm", "{{.Name}}", "--hpet", "on" ],
-        [ "modifyvm", "{{.Name}}", "--keyboard", "usb" ],
-        [ "modifyvm", "{{.Name}}", "--memory", "{{ user `memory` }}" ],
-        [ "modifyvm", "{{.Name}}", "--mouse", "usbtablet" ],
-        [ "modifyvm", "{{.Name}}", "--usbehci", "on"],
-        [ "modifyvm", "{{.Name}}", "--vram", "16" ],
-        [ "storagectl", "{{.Name}}", "--name", "IDE Controller", "--remove" ]
-      ],
-      "vm_name": "{{ user `vm_name` }}"
+  {
+    "boot_wait": "2s",
+    "disk_size": "{{ user `disk_size` }}",
+    "guest_os_type": "{{ user `vmware_guest_os_type` }}",
+    "iso_checksum_type": "none",
+    "iso_url": "{{ user `iso_url` }}",
+    "output_directory": "output-{{ user `vm_name` }}-vmware-iso",
+    "shutdown_command": "echo '{{ user `ssh_username` }}'|sudo -S shutdown -h now",
+    "skip_compaction": true,
+    "ssh_password": "{{ user `ssh_password` }}",
+    "ssh_port": 22,
+    "ssh_username": "{{ user `ssh_username` }}",
+    "ssh_wait_timeout": "10000s",
+    "tools_upload_flavor": "darwin",
+    "type": "vmware-iso",
+    "vm_name": "{{ user `vm_name` }}",
+    "vmx_data": {
+      "cpuid.coresPerSocket": "1",
+      "ehci.present": "TRUE",
+      "firmware": "efi",
+      "hpet0.present": "TRUE",
+      "ich7m.present": "TRUE",
+      "keyboardAndMouseProfile": "macProfile",
+      "memsize": "{{ user `memory` }}",
+      "numvcpus": "{{ user `cpus` }}",
+      "smc.present": "TRUE",
+      "usb.present": "TRUE"
     }
+  },
+  {
+    "boot_wait": "2s",
+    "disk_size": "{{ user `disk_size` }}",
+    "guest_additions_mode": "disable",
+    "guest_os_type": "{{ user `virtualbox_guest_os_type` }}",
+    "hard_drive_interface": "sata",
+    "headless": "{{ user `headless` }}",
+    "iso_checksum_type": "none",
+    "iso_interface": "sata",
+    "iso_url": "{{ user `iso_url` }}",
+    "output_directory": "output-{{ user `vm_name` }}-virtualbox-iso",
+    "shutdown_command": "echo '{{ user `ssh_username` }}'|sudo -S shutdown -h now",
+    "ssh_password": "{{ user `ssh_password` }}",
+    "ssh_port": 22,
+    "ssh_username": "{{ user `ssh_username` }}",
+    "ssh_wait_timeout": "10000s",
+    "type": "virtualbox-iso",
+    "vboxmanage": [
+      [ "modifyvm", "{{.Name}}", "--audiocontroller", "hda" ],
+    [ "modifyvm", "{{.Name}}", "--boot1", "dvd" ],
+    [ "modifyvm", "{{.Name}}", "--boot2", "disk" ],
+    [ "modifyvm", "{{.Name}}", "--chipset", "ich9" ],
+    [ "modifyvm", "{{.Name}}", "--firmware", "efi" ],
+    [ "modifyvm", "{{.Name}}", "--hpet", "on" ],
+    [ "modifyvm", "{{.Name}}", "--keyboard", "usb" ],
+    [ "modifyvm", "{{.Name}}", "--memory", "{{ user `memory` }}" ],
+    [ "modifyvm", "{{.Name}}", "--mouse", "usbtablet" ],
+    [ "modifyvm", "{{.Name}}", "--usbehci", "on"],
+    [ "modifyvm", "{{.Name}}", "--vram", "16" ],
+    [ "storagectl", "{{.Name}}", "--name", "IDE Controller", "--remove" ]
+      ],
+    "vm_name": "{{ user `vm_name` }}"
+  }
   ],
-  "post-processors": [
+    "post-processors": [
     {
       "keep_input_artifact": false,
       "output": "box/osx/{{user `vm_name`}}.box",
@@ -43,39 +71,40 @@
       "vagrantfile_template": "{{ user `vagrantfile_template` }}"
     }
   ],
-  "provisioners": [
+    "provisioners": [
     {
       "environment_vars": [
         "UPDATE={{user `update`}}",
-        "INSTALL_XCODE_CLI_TOOLS={{user `install_xcode_cli_tools`}}",
-        "INSTALL_VAGRANT_KEYS={{user `install_vagrant_keys`}}",
-        "SSH_USERNAME={{ user `ssh_username` }}",
-        "SSH_PASSWORD={{ user `ssh_password` }}"
-      ],
+      "INSTALL_XCODE_CLI_TOOLS={{user `install_xcode_cli_tools`}}",
+      "INSTALL_VAGRANT_KEYS={{user `install_vagrant_keys`}}",
+      "SSH_USERNAME={{ user `ssh_username` }}",
+      "SSH_PASSWORD={{ user `ssh_password` }}"
+        ],
       "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E -S bash '{{ .Path }}'",
       "scripts": [
         "script/ubuntu.sh",
-        "script/xcode.sh",
-        "script/network.sh",
-        "script/update.sh",
-        "script/minimize.sh"
-      ],
+      "script/vmware.sh",
+      "script/xcode.sh",
+      "script/network.sh",
+      "script/update.sh",
+      "script/minimize.sh"
+        ],
       "type": "shell"
     }
   ],
-  "variables": {
-    "cpus": "2",
-    "disk_size": "65536",
-    "headless": "true",
-    "install_vagrant_keys": "true",
-    "install_xcode_cli_tools": "true",
-    "iso_url": "dmg/OSX_InstallESD_10.11.1_15B42.dmg",
-    "memory": "2048",
-    "ssh_password": "ubuntu",
-    "ssh_username": "ubuntu",
-    "update": "true",
-    "vagrantfile_template": "",
-    "vm_name": "osx1011",
-    "virtualbox_guest_os_type": "MacOS1011_64"
-  }
+    "variables": {
+      "cpus": "2",
+      "disk_size": "65536",
+      "headless": "true",
+      "install_vagrant_keys": "true",
+      "install_xcode_cli_tools": "true",
+      "iso_url": "dmg/OSX_InstallESD_10.11.1_15B42.dmg",
+      "memory": "2048",
+      "ssh_password": "ubuntu",
+      "ssh_username": "ubuntu",
+      "update": "true",
+      "vagrantfile_template": "",
+      "vm_name": "osx1011",
+      "virtualbox_guest_os_type": "MacOS1011_64"
+    }
 }
