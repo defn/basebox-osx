@@ -12,19 +12,16 @@ Veewee::Definition.declare({
   :iso_download_timeout => "1000",
   :boot_wait => "60",
   :ssh_login_timeout => "10000",
-  :ssh_user => "vagrant",
-  :ssh_password => "vagrant",
+  :ssh_user => "ubuntu",
+  :ssh_password => "ubuntu",
   :ssh_key => "",
   :ssh_host_port => "7222",
   :ssh_guest_port => "22",
   :sudo_cmd => "echo '%p'|sudo -S sh '%f'",
   :shutdown_cmd => "shutdown -h now",
   :postinstall_files => [
-    "vagrant.sh",             # Vagrant config (vagrant user, keys)
-    "vmware.sh",              # VMware config
-    "xcode-cli-tools.sh",     # Xcode CLI tools
-    "chef-omnibus.sh",        # Chef Omnibus install
-    "puppet.sh",               # Puppet install from Hashicorp's puppet-boostrap repo
+    "ubuntu.sh",             # Ubuntu config (ubuntu user, keys)
+    "xcode-cli-tools.sh"      # Xcode CLI tools
   ],
   :postinstall_timeout => "10000"
 })

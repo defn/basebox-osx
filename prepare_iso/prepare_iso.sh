@@ -12,7 +12,7 @@
 #    'disk0', presumably the hard disk attached to the VM.
 # 3. A 'veewee-config.pkg' installer package is built, which is added to the OS X
 #    install by way of the OSInstall.collection file. This package creates the
-#    'vagrant' user, configures sshd and sudoers, and disables setup assistants.
+#    'ubuntu' user, configures sshd and sudoers, and disables setup assistants.
 # 4. veewee-config.pkg and the various support utilities are copied, and the disk
 #    image is saved to the output path.
 #
@@ -41,10 +41,10 @@ used to perform an automated installation. The new image will be named
 
 Optional switches:
   -u <user>
-    Sets the username of the root user, defaults to 'vagrant'.
+    Sets the username of the root user, defaults to 'ubuntu'.
 
   -p <password>
-    Sets the password of the root user, defaults to 'vagrant'.
+    Sets the password of the root user, defaults to 'ubuntu'.
 
   -i <path to image>
     Sets the path of the avatar image for the root user, defaulting to the vagrant icon.
@@ -87,8 +87,8 @@ SCRIPT_DIR="$(cd "$(dirname "$0")"; pwd)"
 SUPPORT_DIR="$SCRIPT_DIR/support"
 
 # Parse the optional command line switches
-USER="vagrant"
-PASSWORD="vagrant"
+USER="ubuntu"
+PASSWORD="ubuntu"
 IMAGE_PATH="$SUPPORT_DIR/vagrant.jpg"
 
 # Flags

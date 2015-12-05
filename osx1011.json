@@ -1,13 +1,10 @@
 {
-  "_comment": "Build with `packer build -var-file=osx1011.json osx.json`",
   "vm_name": "osx1011",
   "desktop": "false",
   "cpus": "1",
   "disk_size": "64000",
-  "iso_url": "dmg/OSX_InstallESD_10.11_15A284.dmg",
+  "iso_url": "dmg/OSX_InstallESD_10.11.1_15B42.dmg",
   "memory": "2048",
-  "parallels_guest_os_type": "win-8",
   "vagrantfile_template": "",
-  "virtualbox_guest_os_type": "MacOS1011_64",
-  "vmware_guest_os_type": "darwin15-64"
+  "virtualbox_guest_os_type": "MacOS1011_64"
 }

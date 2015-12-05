@@ -102,11 +102,6 @@
   ],
   "provisioners": [
     {
-      "destination": "/private/tmp/set_kcpassword.py",
-      "source": "script/support/set_kcpassword.py",
-      "type": "file"
-    },
-    {
       "environment_vars": [
         "AUTOLOGIN={{user `autologin`}}",
         "CM={{user `cm`}}",
@@ -119,13 +114,9 @@
       ],
       "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E -S bash '{{ .Path }}'",
       "scripts": [
-        "script/vagrant.sh",
-        "script/vmware.sh",
-        "script/parallels.sh",
+        "script/ubuntu.sh",
         "script/xcode-cli-tools.sh",
-        "script/cmtool.sh",
         "script/add-network-interface-detection.sh",
-        "script/autologin.sh",
         "script/update.sh",
         "script/minimize.sh"
       ],
@@ -143,8 +134,8 @@
     "iso_url": "dmg/OSX_InstallESD_10.11_15A284.dmg",
     "memory": "2048",
     "parallels_guest_os_type": "win-8",
-    "ssh_password": "vagrant",
-    "ssh_username": "vagrant",
+    "ssh_password": "ubuntu",
+    "ssh_username": "ubuntu",
     "update": "true",
     "vagrantfile_template": "",
     "version": "0.1.0",
