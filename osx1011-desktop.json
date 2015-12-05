@@ -1,6 +1,5 @@
 {
   "vm_name": "osx1011-desktop",
-  "headless": "false",
   "cpus": "1",
   "disk_size": "62536",
   "iso_url": "dmg/OSX_InstallESD_10.11_15A284.dmg",
