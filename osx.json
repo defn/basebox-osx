@@ -43,10 +43,10 @@
     {
       "environment_vars": [
         "UPDATE={{user `update`}}",
-      "INSTALL_XCODE_CLI_TOOLS={{user `install_xcode_cli_tools`}}",
-      "INSTALL_VAGRANT_KEYS={{user `install_vagrant_keys`}}",
-      "SSH_USERNAME={{ user `ssh_username` }}",
-      "SSH_PASSWORD={{ user `ssh_password` }}"
+        "INSTALL_XCODE_CLI_TOOLS={{user `install_xcode_cli_tools`}}",
+        "INSTALL_VAGRANT_KEYS={{user `install_vagrant_keys`}}",
+        "SSH_USERNAME={{ user `ssh_username` }}",
+        "SSH_PASSWORD={{ user `ssh_password` }}"
         ],
       "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E -S bash '{{ .Path }}'",
       "scripts": [
@@ -70,7 +70,7 @@
       "memory": "2048",
       "ssh_password": "ubuntu",
       "ssh_username": "ubuntu",
-      "update": "true",
+      "update": "false",
       "vagrantfile_template": "",
       "vm_name": "osx1011"
     }
