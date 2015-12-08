@@ -114,11 +114,10 @@ function main {
     fi
   fi
 
-  if [ "$1" = "" ]; then
-    msg_error "Currently an explicit output directory is required as the second argument."
-    exit 1
-  else
+  if [ -n "${1:-}" ]; then
     OUT_DIR="$1"; shift
+  else
+    OUT_DIR="$(pwd)"
   fi
 
   if [ ! -d "$OUT_DIR" ]; then

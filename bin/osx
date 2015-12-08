@@ -10,7 +10,7 @@ function main {
       prepare_iso/prepare_iso.sh /Applications/Install\ OS\ X\ El\ Capitan.app dmg
       ;;
     build)
-      packer build --only=vmware-iso osx.json
+      packer build -var iso_dir="$shome" --only=vmware-iso osx.json
       ;;
   esac
 }

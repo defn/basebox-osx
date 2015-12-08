@@ -5,7 +5,7 @@
     "disk_size": "{{ user `disk_size` }}",
     "guest_os_type": "{{ user `vmware_guest_os_type` }}",
     "iso_checksum_type": "none",
-    "iso_url": "{{ user `iso_url` }}",
+    "iso_url": "{{ user `iso_dir` }}/{{ user `iso_url` }}",
     "output_directory": "output-{{ user `vm_name` }}-vmware-iso",
     "shutdown_command": "echo '{{ user `ssh_username` }}'|sudo -S shutdown -h now",
     "skip_compaction": true,
@@ -16,19 +16,7 @@
     "tools_upload_flavor": "darwin",
     "type": "vmware-iso",
     "vm_name": "{{ user `vm_name` }}",
-    "vmx_template_path": "osx.vmx",
-    "vmx_data": {
-      "cpuid.coresPerSocket": "1",
-      "ehci.present": "TRUE",
-      "firmware": "efi",
-      "hpet0.present": "TRUE",
-      "ich7m.present": "TRUE",
-      "keyboardAndMouseProfile": "macProfile",
-      "memsize": "{{ user `memory` }}",
-      "numvcpus": "{{ user `cpus` }}",
-      "smc.present": "TRUE",
-      "usb.present": "TRUE"
-    }
+    "vmx_template_path": "osx.vmx"
   }
   ],
     "post-processors": [
@@ -66,7 +54,7 @@
       "headless": "true",
       "install_vagrant_keys": "true",
       "install_xcode_cli_tools": "true",
-      "iso_url": "dmg/OSX_InstallESD_10.11_15A284.iso",
+      "iso_url": "osx.iso",
       "memory": "2048",
       "ssh_password": "ubuntu",
       "ssh_username": "ubuntu",
