@@ -1,10 +1,36 @@
 #!/usr/bin/env bash
 
+export VAGRANT_DEFAULT_PROVIDER="vmware_desktop"
+
 function main {
   local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
   source "$shome/script/profile"
 
-  true
+  export VAGRANT_CWD="$HOME"
+
+  if [[ "$#" == 0 ]]; then
+    echo "$(basename "$0"): up|destroy ssh|rsync|scp id rebuild build|remove|add"
+    return 0
+  fi
+
+  local nm_action="$1"; shift
+  local nm_guest='osx'
+  local nm_provider='vmware_desktop'
+
+  case "$nm_action" in
+    up|destroy)
+      vagrant "$nm_action" "$nm_guest" "$@"
+      ;;
+    ssh|rsync|scp)
+      vagrant "$nm_guest" "$nm_action" "$@"
+      ;;
+    id)
+      cat "$(set +f; ls -td "$VAGRANT_CWD/.vagrant/machines/$nm_guest"/*/id | head -1)"; echo
+      ;;
+    *)
+      vagrant "$nm_action" "$nm_guest" "$@"
+      ;;
+  esac
 }
 
 source sub "$BASH_SOURCE" "$@"
