@@ -7,7 +7,4 @@ function main {
   basebox remove osx
 }
 
-main "$@"
-}
-
 source sub "$BASH_SOURCE" "$@"
