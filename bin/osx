@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export VAGRANT_DEFAULT_PROVIDER="vmware_fusion"
+export VAGRANT_DEFAULT_PROVIDER="vmware_desktop"
 
 function main {
   local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
@@ -29,6 +29,9 @@ function main {
       ;;
     id)
       cat "$(set +f; ls -td "$VAGRANT_CWD/.vagrant/machines/$nm_guest"/*/id | head -1)"; echo
+      ;;
+    rebuild|remove|add)
+      parity "$nm_action" "$@"
       ;;
     *)
       vagrant "$nm_action" "$nm_guest" "$@"
