@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export VAGRANT_DEFAULT_PROVIDER="vmware_desktop"
+export VAGRANT_DEFAULT_PROVIDER="vmware_fusion"
 
 function main {
   local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
@@ -15,7 +15,7 @@ function main {
 
   local nm_action="$1"; shift
   local nm_guest='osx'
-  local nm_provider='vmware_desktop'
+  local nm_provider='vmware_fusion'
 
   case "$nm_action" in
     up)
