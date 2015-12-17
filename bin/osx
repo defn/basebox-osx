@@ -30,7 +30,12 @@ function main {
     id)
       cat "$(set +f; ls -td "$VAGRANT_CWD/.vagrant/machines/$nm_guest"/*/id | head -1)"; echo
       ;;
-    rebuild|remove|add)
+    rebuild)
+      osx build "$@"
+      osx remove 2>&1 >/dev/null
+      osx add
+      ;;
+    remove|add)
       parity "$nm_action" "$@"
       ;;
     *)
