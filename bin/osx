@@ -32,7 +32,7 @@ function main {
       ;;
     rebuild)
       osx build "$@"
-      osx remove 2>&1 >/dev/null
+      osx remove >/dev/null 2>&1 || true
       osx add
       ;;
     remove|add)
