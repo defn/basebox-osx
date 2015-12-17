@@ -40,7 +40,6 @@
       "scripts": [
       "script/ubuntu.sh",
       "script/network.sh",
-      "script/update.sh",
       "script/vmware.sh",
       "script/minimize.sh"
         ],
