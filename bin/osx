@@ -15,7 +15,6 @@ function main {
 
   local nm_action="$1"; shift
   local nm_guest='osx'
-  local nm_provider='vmware_fusion'
 
   case "$nm_action" in
     up)
