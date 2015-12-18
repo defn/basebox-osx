@@ -3,5 +3,5 @@
 if [[ "$UPDATE" =~ ^(true|yes|on|1|TRUE|YES|ON])$ ]]; then
 
     echo "==> Running software update"
-    softwareupdate --install --all -v 2>&1
+    softwareupdate --install --all -v
 fi
