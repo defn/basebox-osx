@@ -40,9 +40,9 @@
       "scripts": [
       "script/ubuntu.sh",
       "script/network.sh",
-      "script/xcode.sh",
-      "script/update.sh",
       "script/vmware.sh",
+      "script/update.sh",
+      "script/xcode.sh",
       "script/minimize.sh"
         ],
       "type": "shell"
