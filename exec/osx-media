@@ -159,11 +159,6 @@ function main {
   msg_status "OS X version detected: 10.$DMG_OS_VERS_MAJOR.$DMG_OS_VERS_MINOR, build $DMG_OS_BUILD"
 
   OUTPUT_ISO="$OUT_DIR/OSX_InstallESD_${DMG_OS_VERS}_${DMG_OS_BUILD}.iso"
-  if [ -e "$OUTPUT_ISO" ]; then
-    msg_error "Output file $OUTPUT_ISO already exists! We're not going to overwrite it, exiting.."
-    hdiutil detach -force "$MNT_ESD"
-    exit 1
-  fi
 
   # Build our post-installation pkg that will create a user and enable ssh
   msg_status "Making firstboot installer pkg.."
