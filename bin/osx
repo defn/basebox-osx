@@ -35,6 +35,7 @@ function main {
       osx add
       ;;
     remove|add)
+      cd "$shome"
       parity "$nm_action" "$@"
       ;;
     *)

@@ -87,9 +87,9 @@ function main {
   fi
 
   local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
+  cd "$shome"
   SUPPORT_DIR="$shome/support"
-
-  # Parse the optional command line switches
+# Parse the optional command line switches
   USER="ubuntu"
   PASSWORD="ubuntu"
   IMAGE_PATH="$SUPPORT_DIR/vagrant.jpg"
