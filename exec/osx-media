@@ -222,23 +222,23 @@ function main {
 
   rm "$PACKAGES_DIR"
   msg_status "Moving 'Packages' directory from the ESD to BaseSystem.."
-  mv -v "$MNT_ESD/Packages" "$MNT_BASE_SYSTEM/System/Installation/"
+  sudo mv -v "$MNT_ESD/Packages" "$MNT_BASE_SYSTEM/System/Installation/"
 
   # This isn't strictly required for Mavericks, but Yosemite will consider the
   # installer corrupt if this isn't included, because it cannot verify BaseSystem's
   # consistency and perform a recovery partition verification
   msg_status "Copying in original BaseSystem dmg and chunklist.."
-  cp "$MNT_ESD/BaseSystem.dmg" "$MNT_BASE_SYSTEM/"
-  cp "$MNT_ESD/BaseSystem.chunklist" "$MNT_BASE_SYSTEM/"
+  sudo rsync -ia "$MNT_ESD/BaseSystem.dmg" "$MNT_BASE_SYSTEM/"
+  sudo rsync -ia "$MNT_ESD/BaseSystem.chunklist" "$MNT_BASE_SYSTEM/"
 
   msg_status "Adding automated components.."
   CDROM_LOCAL="$MNT_BASE_SYSTEM/private/etc/rc.cdrom.local"
   echo 'diskutil eraseDisk jhfs+ "Macintosh HD" GPTFormat disk0' > "$CDROM_LOCAL"
   chmod a+x "$CDROM_LOCAL"
   mkdir "$PACKAGES_DIR/Extras"
-  cp "$SUPPORT_DIR/minstallconfig.xml" "$PACKAGES_DIR/Extras/"
-  cp "$SUPPORT_DIR/OSInstall.collection" "$PACKAGES_DIR/"
-  cp "$BUILT_PKG" "$PACKAGES_DIR/"
+  sudo rsync -ia "$SUPPORT_DIR/minstallconfig.xml" "$PACKAGES_DIR/Extras/"
+  sudo rsync -ia "$SUPPORT_DIR/OSInstall.collection" "$PACKAGES_DIR/"
+  sudo rsync -ia "$BUILT_PKG" "$PACKAGES_DIR/"
   rm -rf "$SUPPORT_DIR/tmp"
 
   msg_status "Unmounting BaseSystem.."
@@ -252,22 +252,7 @@ function main {
   mv "$OUTPUT_ISO.cdr" "$OUTPUT_ISO"
   rm -rf "$MNT_ESD" "$SHADOW_FILE"
 
-  if [ -n "$SUDO_UID" ] && [ -n "$SUDO_GID" ]; then
-    msg_status "Fixing permissions.."
-    chown -R $SUDO_UID:$SUDO_GID \
-      "$OUT_DIR"
-  fi
-
-  msg_status "Checksumming output image.."
-  MD5=$(md5 -q "$OUTPUT_ISO")
-  msg_status "MD5: $MD5"
-
   msg_status "Done. Built image is located at $OUTPUT_ISO. Add this iso and its checksum to your template."
 }
-
-if [ $(id -u) -ne 0 ]; then
-  msg_error "This script must be run as root, as it saves a disk image with ownerships enabled."
-  exit 1
-fi
 
 main "$@"
