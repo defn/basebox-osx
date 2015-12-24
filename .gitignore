@@ -12,3 +12,5 @@ Makefile.local
 
 .DS_Store
 iso
+
+/.bundle
