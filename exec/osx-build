@@ -5,7 +5,7 @@ function main {
   source "$shome/script/profile"
 
   cd "$shome"
-  packer build -var iso_dir="$shome" --only=vmware-iso osx.json
+  packer build -var iso_dir="$shome" packer.json
 }
 
 source sub "$BASH_SOURCE" "$@"
