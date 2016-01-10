@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Preparation script for an OS X automated installation for use with VeeWee/Packer/Vagrant
+# Preparation script for an OS X automated installation for use with Packer/Vagrant
 # 
 # What the script does, in more detail:
 # 
@@ -10,10 +10,10 @@
 #    file in /etc, which is a supported local configuration sourced in at boot time
 #    by the installer environment. This file contains instructions to erase and format
 #    'disk0', presumably the hard disk attached to the VM.
-# 3. A 'veewee-config.pkg' installer package is built, which is added to the OS X
+# 3. A 'basebox-config.pkg' installer package is built, which is added to the OS X
 #    install by way of the OSInstall.collection file. This package creates the
 #    'ubuntu' user, configures sshd and sudoers, and disables setup assistants.
-# 4. veewee-config.pkg and the various support utilities are copied, and the disk
+# 4. basebox-config.pkg and the various support utilities are copied, and the disk
 #    image is saved to the output path.
 #
 # Thanks:
@@ -27,36 +27,6 @@
 #
 # Antony Blakey for updates to support OS X 10.11:
 # https://github.com/timsutton/osx-vm-templates/issues/40
-
-usage() {
-	cat <<EOF
-Usage:
-$(basename "$0") [-upiD] "/path/to/InstallESD.dmg" /path/to/output/directory
-$(basename "$0") [-upiD] "/path/to/Install OS X [Name].app" /path/to/output/directory
-
-Description:
-Converts an OS X installer to a new image that contains components
-used to perform an automated installation. The new image will be named
-'OSX_InstallESD_[osversion].dmg.'
-
-Optional switches:
-  -u <user>
-    Sets the username of the root user, defaults to 'ubuntu'.
-
-  -p <password>
-    Sets the password of the root user, defaults to 'ubuntu'.
-
-  -i <path to image>
-    Sets the path of the avatar image for the root user, defaulting to the vagrant icon.
-
-  -D <flag>
-    Sets the specified flag. Valid flags are:
-      DISABLE_REMOTE_MANAGEMENT
-      DISABLE_SCREEN_SHARING
-      DISABLE_SIP
-
-EOF
-}
 
 cleanup() {
   hdiutil detach -quiet -force "$MNT_ESD" || echo > /dev/null
@@ -81,10 +51,7 @@ render_template() {
 function main {
   set -ex
 
-  if [ $# -eq 0 ]; then
-    usage
-    exit 1
-  fi
+  sudo true
 
   local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
   cd "$shome"
@@ -99,6 +66,9 @@ function main {
   DISABLE_SCREEN_SHARING=0
   DISABLE_SIP=0
 
+  if [[ "$#" == 0 ]]; then
+    set -- "/Applications/Install OS X El Capitan.app"
+  fi
   ESD="$1"; shift
   if [ ! -e "$ESD" ]; then
     msg_error "Input installer image $ESD could not be found! Exiting.."
@@ -130,8 +100,8 @@ function main {
     rm "$ESD.shadow"
   fi
 
-  MNT_ESD=$(/usr/bin/mktemp -d /tmp/veewee-osx-esd.XXXX)
-  SHADOW_FILE=$(/usr/bin/mktemp /tmp/veewee-osx-shadow.XXXX)
+  MNT_ESD=$(/usr/bin/mktemp -d /tmp/basebox-osx-esd.XXXX)
+  SHADOW_FILE=$(/usr/bin/mktemp /tmp/basebox-osx-shadow.XXXX)
   rm "$SHADOW_FILE"
   msg_status "Attaching input OS X installer image with shadow file.."
   hdiutil attach "$ESD" -mountpoint "$MNT_ESD" -shadow "$SHADOW_FILE" -nobrowse -owners on 
@@ -143,7 +113,7 @@ function main {
 
   msg_status "Mounting BaseSystem.."
   BASE_SYSTEM_DMG="$MNT_ESD/BaseSystem.dmg"
-  MNT_BASE_SYSTEM=$(/usr/bin/mktemp -d /tmp/veewee-osx-basesystem.XXXX)
+  MNT_BASE_SYSTEM=$(/usr/bin/mktemp -d /tmp/basebox-osx-basesystem.XXXX)
   [ ! -e "$BASE_SYSTEM_DMG" ] && msg_error "Could not find BaseSystem.dmg in $MNT_ESD"
   hdiutil attach "$BASE_SYSTEM_DMG" -mountpoint "$MNT_BASE_SYSTEM" -nobrowse -owners on
   if [ $? -ne 0 ]; then
@@ -184,12 +154,12 @@ function main {
   chmod a+x "$SUPPORT_DIR/tmp/Scripts/postinstall"
 
   # build it
-  BUILT_COMPONENT_PKG="$SUPPORT_DIR/tmp/veewee-config-component.pkg"
-  BUILT_PKG="$SUPPORT_DIR/tmp/veewee-config.pkg"
+  BUILT_COMPONENT_PKG="$SUPPORT_DIR/tmp/basebox-config-component.pkg"
+  BUILT_PKG="$SUPPORT_DIR/tmp/basebox-config.pkg"
   pkgbuild --quiet \
     --root "$SUPPORT_DIR/pkgroot" \
     --scripts "$SUPPORT_DIR/tmp/Scripts" \
-    --identifier com.vagrantup.veewee-config \
+    --identifier com.vagrantup.basebox-config \
     --version 0.1 \
     "$BUILT_COMPONENT_PKG"
   productbuild \
@@ -200,7 +170,7 @@ function main {
   # We'd previously mounted this to check versions
   hdiutil detach "$MNT_BASE_SYSTEM"
 
-  BASE_SYSTEM_DMG_RW="$(/usr/bin/mktemp /tmp/veewee-osx-basesystem-rw.XXXX).dmg"
+  BASE_SYSTEM_DMG_RW="$(/usr/bin/mktemp /tmp/basebox-osx-basesystem-rw.XXXX).dmg"
 
   msg_status "Creating empty read-write DMG located at $BASE_SYSTEM_DMG_RW.."
   hdiutil create -o "$BASE_SYSTEM_DMG_RW" -size 10g -layout SPUD -fs HFS+J

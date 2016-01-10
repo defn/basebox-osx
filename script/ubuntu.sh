@@ -1,11 +1,14 @@
 #!/bin/sh
-date > /etc/box_build_time
-OSX_VERS=$(sw_vers -productVersion | awk -F "." '{print $2}')
+
+# create missing group
+dscl . -create /Groups/ubuntu
+dscl . -create /Groups/ubuntu PrimaryGroupID 1000
+id -a ubuntu
 
 # Set computer/hostname
-COMPNAME=osx-10_${OSX_VERS}
+COMPNAME=basebox
 scutil --set ComputerName ${COMPNAME}
-scutil --set HostName ${COMPNAME}.meh
+scutil --set HostName ${COMPNAME}
 
 # Packer passes boolean user variables through as '1', but this might change in
 # the future, so also check for 'true'.
@@ -18,6 +21,3 @@ if [ "$INSTALL_VAGRANT_KEYS" = "true" ] || [ "$INSTALL_VAGRANT_KEYS" = "1" ]; th
 	chown -R "$SSH_USERNAME" "/Users/$SSH_USERNAME/.ssh"
 fi
 
-# Create a group and assign the user to it
-dseditgroup -o create "$SSH_USERNAME"
-dseditgroup -o edit -a "$SSH_USERNAME" "$SSH_USERNAME"
