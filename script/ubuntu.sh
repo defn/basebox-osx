@@ -6,9 +6,8 @@ dscl . -create /Groups/ubuntu PrimaryGroupID 1000
 id -a ubuntu
 
 # Set computer/hostname
-COMPNAME=basebox
-scutil --set ComputerName ${COMPNAME}
-scutil --set HostName ${COMPNAME}
+scutil --set ComputerName ubuntu
+scutil --set HostName ubuntu.dev
 
 # Packer passes boolean user variables through as '1', but this might change in
 # the future, so also check for 'true'.
