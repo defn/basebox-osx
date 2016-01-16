@@ -17,7 +17,7 @@
     "type": "vmware-iso",
     "vm_name": "{{ user `vm_name` }}",
     "vmx_template_path": "osx.vmx",
-    "headlesss": "{{ user `headless`}}"
+    "headless": "{{ user `headless`}}"
   },
   {
     "output_directory": "output-{{ user `vm_name` }}-vmware-vmx",
@@ -31,7 +31,7 @@
     "type": "vmware-vmx",
     "vm_name": "{{ user `vm_name` }}",
     "source_path": "{{ user `vmx`}}",
-    "headlesss": "{{ user `headless`}}"
+    "headless": "{{ user `headless`}}"
   }
   ],
   "post-processors": [
