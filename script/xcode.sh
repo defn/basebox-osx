@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if git; then
+if git version; then
   exit 0
 fi
 
