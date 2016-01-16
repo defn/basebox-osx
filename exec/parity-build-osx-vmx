@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+function main {
+  export BASEBOX_TYPE='vmx'
+  exec parity build osx "$@"
+}
+
+source sub "$0" "$@"
