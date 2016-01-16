@@ -16,7 +16,8 @@
     "tools_upload_flavor": "darwin",
     "type": "vmware-iso",
     "vm_name": "{{ user `vm_name` }}",
-    "vmx_template_path": "osx.vmx"
+    "vmx_template_path": "osx.vmx",
+    "headlesss": "{{ user `headless`}}"
   },
   {
     "output_directory": "output-{{ user `vm_name` }}-vmware-vmx",
@@ -29,7 +30,9 @@
     "tools_upload_flavor": "darwin",
     "type": "vmware-vmx",
     "vm_name": "{{ user `vm_name` }}",
-    "source_path": "{{ user `vmx`}}"
+    "source_path": "{{ user `vmx`}}",
+    "headlesss": "{{ user `headless`}}"
+  },
   }
   ],
   "post-processors": [
