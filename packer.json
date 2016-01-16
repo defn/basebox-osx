@@ -50,14 +50,7 @@
       "SSH_PASSWORD={{ user `ssh_password` }}"
     ],
     "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E -S bash '{{ .Path }}'",
-    "scripts": [
-      "script/ubuntu.sh",
-      "script/network.sh",
-      "script/vmware.sh",
-      "script/update.sh",
-      "script/xcode.sh",
-      "script/minimize.sh"
-    ],
+    "scripts": [ ],
     "type": "shell"
   }
   ],
