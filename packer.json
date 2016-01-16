@@ -32,7 +32,6 @@
     "vm_name": "{{ user `vm_name` }}",
     "source_path": "{{ user `vmx`}}",
     "headlesss": "{{ user `headless`}}"
-  },
   }
   ],
   "post-processors": [
