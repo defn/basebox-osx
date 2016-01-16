@@ -1,5 +1,9 @@
 #!/bin/sh
 
+if git; then
+  exit 0
+fi
+
 # create the placeholder file that's checked by CLI updates' .dist code
 # in Apple's SUS catalog
 touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
