@@ -1,75 +1,71 @@
 {
   "builders": [
   {
-    "boot_wait": "2s",
-    "disk_size": "{{ user `disk_size` }}",
-    "guest_os_type": "{{ user `vmware_guest_os_type` }}",
-    "iso_checksum_type": "none",
-    "iso_url": "{{ user `iso_dir` }}/{{ user `iso_url` }}",
-    "output_directory": "output-{{ user `vm_name` }}-vmware-iso",
-    "shutdown_command": "echo '{{ user `ssh_username` }}'|sudo -S shutdown -h now",
-    "skip_compaction": true,
-    "ssh_password": "{{ user `ssh_password` }}",
-    "ssh_port": 22,
-    "ssh_username": "{{ user `ssh_username` }}",
-    "ssh_wait_timeout": "10000s",
-    "tools_upload_flavor": "darwin",
     "type": "vmware-iso",
     "vm_name": "{{ user `vm_name` }}",
-    "vmx_template_path": "osx.vmx",
-    "headless": "{{ user `headless`}}"
-  },
-  {
-    "output_directory": "output-{{ user `vm_name` }}-vmware-vmx",
-    "shutdown_command": "echo '{{ user `ssh_username` }}'|sudo -S shutdown -h now",
-    "skip_compaction": true,
+    "disk_size": "{{ user `disk_size` }}",
     "ssh_password": "{{ user `ssh_password` }}",
-    "ssh_port": 22,
     "ssh_username": "{{ user `ssh_username` }}",
     "ssh_wait_timeout": "10000s",
+    "headless": "{{ user `headless` }}",
+    "guest_os_type": "{{ user `vmware_guest_os_type` }}",
+    "output_directory": "output-{{ user `vm_name` }}-vmware-iso",
+    "shutdown_command": "echo '{{ user `ssh_username` }}'|sudo -S shutdown -h now",
+    "iso_url": "{{ user `iso_dir` }}/{{ user `iso_url` }}",
+    "iso_checksum_type": "none",
+
+    "boot_wait": "2s",
+    "skip_compaction": true,
     "tools_upload_flavor": "darwin",
+    "vmx_template_path": "osx.vmx"
+  },
+  {
     "type": "vmware-vmx",
     "vm_name": "{{ user `vm_name` }}",
-    "source_path": "{{ user `vmx`}}",
-    "headless": "{{ user `headless`}}"
+    "ssh_password": "{{ user `ssh_password` }}",
+    "ssh_username": "{{ user `ssh_username` }}",
+    "ssh_wait_timeout": "10000s",
+    "headless": "{{ user `headless` }}",
+    "output_directory": "output-{{ user `vm_name` }}-vmware-vmx",
+    "shutdown_command": "echo '{{ user `ssh_password` }}'|sudo -S shutdown -h now",
+    "source_path": "{{ user `vmx` }}",
+
+    "skip_compaction": true,
+    "tools_upload_flavor": "darwin"
   }
   ],
-  "post-processors": [
-  {
-    "keep_input_artifact": false,
-    "output": "{{ user `cache`}}/box/vmware_desktop/{{user `vm_name`}}.box",
-    "type": "vagrant",
-    "vagrantfile_template": "{{ user `vagrantfile_template` }}"
-  }
+    "post-processors": [
+    {
+      "type": "vagrant",
+      "keep_input_artifact": false,
+      "output": "{{ user `cache` }}/box/{{ user `provider` }}/{{ user `vm_name` }}.box",
+      "vagrantfile_template": "{{ user `vagrantfile_template` }}"
+    }
   ],
-  "provisioners": [
-  {
-    "environment_vars": [
-      "UPDATE={{user `update`}}",
-      "INSTALL_XCODE_CLI_TOOLS={{user `install_xcode_cli_tools`}}",
-      "INSTALL_VAGRANT_KEYS={{user `install_vagrant_keys`}}",
-      "SSH_USERNAME={{ user `ssh_username` }}",
-      "SSH_PASSWORD={{ user `ssh_password` }}"
-    ],
-    "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E -S bash '{{ .Path }}'",
-    "scripts": [ ],
-    "type": "shell"
-  }
+    "provisioners": [
+    {
+      "environment_vars": [
+        "SSH_USERNAME={{ user `ssh_username` }}",
+        "SSH_PASSWORD={{ user `ssh_password` }}"
+        ],
+      "execute_command": "echo '{{ user `ssh_password` }}' | sudo true; {{.Vars}} sudo -E -S bash '{{.Path}}'",
+      "scripts": [ ],
+      "type": "shell"
+    }
   ],
-  "variables": {
-    "cpus": "2",
-    "disk_size": "65536",
-    "headless": "true",
-    "install_vagrant_keys": "true",
-    "install_xcode_cli_tools": "true",
-    "iso_url": "osx.iso",
-    "memory": "2048",
-    "ssh_password": "ubuntu",
-    "ssh_username": "ubuntu",
-    "update": "false",
-    "vagrantfile_template": "",
-    "vm_name": "osx1011",
-    "vmx": "{{ env `VMX` }}",
-    "cache": "{{ env `BASEBOX_CACHE`}}"
-  }
+    "variables": {
+      "cpus": "2",
+      "disk_size": "65536",
+      "headless": "true",
+      "memory": "2048",
+      "ssh_fullname": "ubuntu",
+      "ssh_password": "ubuntu",
+      "ssh_username": "ubuntu",
+      "update": "false",
+      "cache": "{{ env `BASEBOX_CACHE` }}",
+      "vm_name": "osx1011",
+      "iso_url": "osx.iso",
+      "vagrantfile_template": "",
+      "vmx": "{{ env `VMX` }}"
+    }
 }

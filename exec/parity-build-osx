@@ -6,23 +6,68 @@ function main {
 
   cd "$shome"
 
-  local json_var='{}'
+  local nm_packer_builder=
+  local nm_provider=
 
-  local nm_packer_builder="$VAGRANT_DEFAULT_PROVIDER"
-  local nm_provider
+  local nm_region=
+  local nm_snapshot=
+  local nm_vm="ubuntu1404"
+  local secret_key=
+  local access_key=
+  local image_id=
+  local instance_type=
 
-  case "$nm_packer_builder" in
+  case "$VAGRANT_DEFAULT_PROVIDER" in
     vmware_fusion|vmware_desktop)
       nm_provider="vmware_desktop"
       nm_packer_builder="vmware-${BASEBOX_TYPE:-iso}"
       ;;
 
-    "")
-      true ;;
+    virtualbox)
+      nm_provider="${nm_packer_builder}"
+      nm_packer_builder="${nm_packer_builder}-${BASEBOX_TYPE:-iso}"
+      ;;
 
-    "{"*)
-      json_var="$nm_packer_builder"
-      nm_packer_builder=
+    docker)
+      nm_provider='docker'
+      nm_packer_builder='docker'
+      ;;
+
+    aws)
+      nm_provider="${nm_packer_builder}"
+      nm_packer_builder="amazon-ebs"
+
+      if [[ "$#" -gt 0 ]]; then
+        nm_region="$1"; shift
+      fi
+      : ${nm_region:=${AWS_DEFAULT_REGION:-us-west-1}}
+
+      nm_vm="${nm_vm}-${nm_region}"
+      access_key="$AWS_ACCESS_KEY"
+      secret_key="$AWS_SECRET_KEY"
+      nm_snapshot="packer-${nm_region}-$(date +%s)"
+
+      if [[ "$#" -gt 0 ]]; then
+        image_id="$1"; shift
+      else
+        local ap_northeast_1=ami-d886a1b6
+        local ap_southeast_1=ami-a17dbac2
+        local ap_southeast_2=ami-067d2365
+        local eu_central_1=ami-99cad9f5
+        local eu_west_1=ami-a317ced0
+        local sa_east_1=ami-ae44ffc2
+        local us_east_1=ami-f7136c9d
+        local us_west_1=ami-44b1de24
+        local us_west_2=ami-46a3b427
+
+        eval image_id="\$${nm_region//-/_}"
+      fi
+
+      if [[ "$#" -gt 0 ]]; then
+        instance_type="$1"; shift
+      else
+        instance_type='c4.large'
+      fi
       ;;
 
     *)
@@ -31,28 +76,44 @@ function main {
       ;;
   esac
 
-  case "${1:-}" in
-    "{"*)
-      json_var="$1"; shift
-      ;;
-  esac
-
   local tmp_packer="$(mktemp -t XXXXXX)"
   cat "packer.json" | jq \
     --arg provider "$nm_provider" '.provisioners[].scripts = 
-    [ "script/ubuntu.sh",
-      "script/network.sh",
-      "script/vmware.sh",
+    [ "script/first.sh",
       "script/update.sh",
-      "script/xcode.sh",
-      "script/minimize.sh" 
+      "script/sshd.sh",
+      "script/ubuntu.sh",
+      "script/network.sh",
+      "script/\($provider).sh",
+      "script/site.sh",
+      "script/cleanup.sh",
+      "script/last.sh"
     ]' | tee "$tmp_packer"
 
   local tmp_options="$(mktemp -t XXXXXX)"
   jq -n \
+    --arg provider "$nm_provider" \
+    --arg vm_name "$nm_vm" \
+    --arg secret_key "$secret_key" \
+    --arg access_key "$access_key" \
+    --arg region "$nm_region" \
+    --arg snapshot_name "$nm_snapshot" \
+    --arg image_id "$image_id" \
+    --arg instance_type "$instance_type" \
+    --arg iso_path "$shome/iso" \
     --arg iso_dir "$shome" \
     '{  
-        iso_dir: $iso_dir 
+        iso_path: $iso_path, 
+        iso_dir: $iso_dir,
+        provider: $provider,
+        vm_name: $vm_name,
+
+        access_key: $access_key,
+        secret_key: $secret_key,
+        region: $region,
+        snapshot_name: $snapshot_name,
+        image_id: $image_id,
+        instance_type: $instance_type
      }' | tee "$tmp_options"
 
   packer build${nm_packer_builder:+ -only="$nm_packer_builder"} -var-file "$tmp_options" "$tmp_packer"
