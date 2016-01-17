@@ -9,7 +9,7 @@
     "ssh_wait_timeout": "10000s",
     "headless": "{{ user `headless` }}",
     "guest_os_type": "{{ user `vmware_guest_os_type` }}",
-    "output_directory": "output-{{ user `vm_name` }}-vmware-iso",
+    "output_directory": "output/{{ user `vm_name` }}-vmware-iso",
     "shutdown_command": "echo '{{ user `ssh_username` }}'|sudo -S shutdown -h now",
     "iso_url": "{{ user `iso_dir` }}/{{ user `iso_url` }}",
     "iso_checksum_type": "none",
@@ -26,7 +26,7 @@
     "ssh_username": "{{ user `ssh_username` }}",
     "ssh_wait_timeout": "10000s",
     "headless": "{{ user `headless` }}",
-    "output_directory": "output-{{ user `vm_name` }}-vmware-vmx",
+    "output_directory": "output/{{ user `vm_name` }}-vmware-vmx",
     "shutdown_command": "echo '{{ user `ssh_password` }}'|sudo -S shutdown -h now",
     "source_path": "{{ user `vmx` }}",
 
@@ -63,9 +63,10 @@
       "ssh_username": "ubuntu",
       "update": "false",
       "cache": "{{ env `BASEBOX_CACHE` }}",
+      "vagrantfile_template": "",
       "vm_name": "osx1011",
       "iso_url": "osx.iso",
-      "vagrantfile_template": "",
+
       "vmx": "{{ env `VMX` }}"
     }
 }

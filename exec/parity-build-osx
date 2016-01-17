@@ -11,7 +11,7 @@ function main {
 
   local nm_region=
   local nm_snapshot=
-  local nm_vm="ubuntu1404"
+  local nm_vm="osx1011"
   local secret_key=
   local access_key=
   local image_id=
@@ -24,8 +24,8 @@ function main {
       ;;
 
     virtualbox)
-      nm_provider="${nm_packer_builder}"
-      nm_packer_builder="${nm_packer_builder}-${BASEBOX_TYPE:-iso}"
+      nm_provider="virtualbox"
+      nm_packer_builder="virtualbox-${BASEBOX_TYPE:-iso}"
       ;;
 
     docker)
@@ -34,7 +34,7 @@ function main {
       ;;
 
     aws)
-      nm_provider="${nm_packer_builder}"
+      nm_provider="aws"
       nm_packer_builder="amazon-ebs"
 
       if [[ "$#" -gt 0 ]]; then
