@@ -2,6 +2,7 @@
 
 function main {
   export BASEBOX_TYPE='vmx'
+  export BASEBOX_SUFFIX ='vmx'
   export VMX="$1"; shift
   exec parity build osx "$@"
 }
