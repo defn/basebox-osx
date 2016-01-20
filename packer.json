@@ -25,6 +25,7 @@
     "ssh_password": "{{ user `ssh_password` }}",
     "ssh_username": "{{ user `ssh_username` }}",
     "ssh_wait_timeout": "10000s",
+    "ssh_handshake_attempts": 100,
     "headless": "{{ user `headless` }}",
     "output_directory": "output/{{ user `vm_name` }}-vmware-vmx",
     "shutdown_command": "echo '{{ user `ssh_password` }}'|sudo -S shutdown -h now",
@@ -38,7 +39,7 @@
     {
       "type": "vagrant",
       "keep_input_artifact": false,
-      "output": "{{ user `cache` }}/box/{{ user `provider` }}/{{ user `vm_name` }}.box",
+      "output": "{{ user `cache` }}/box/{{ user `provider` }}/{{ user `vm_name` }}{{ user `suffix` }}.box",
       "vagrantfile_template": "{{ user `vagrantfile_template` }}",
       "compression_level": 0
     }
@@ -47,9 +48,14 @@
     {
       "environment_vars": [
         "SSH_USERNAME={{ user `ssh_username` }}",
-        "SSH_PASSWORD={{ user `ssh_password` }}"
+        "SSH_PASSWORD={{ user `ssh_password` }}",
+        "http_proxy={{user `http_proxy`}}",
+        "https_proxy={{user `https_proxy`}}",
+        "ftp_proxy={{user `ftp_proxy`}}",
+        "rsync_proxy={{user `rsync_proxy`}}",
+        "no_proxy={{user `no_proxy`}}"
         ],
-      "execute_command": "echo '{{ user `ssh_password` }}' | sudo true; {{.Vars}} sudo -E -S bash '{{.Path}}'",
+      "execute_command": "echo '{{ user `ssh_password` }}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
       "scripts": [ ],
       "type": "shell"
     }
@@ -64,9 +70,16 @@
       "ssh_username": "ubuntu",
       "update": "false",
       "cache": "{{ env `BASEBOX_CACHE` }}",
+      "suffix": "{{ env `BASEBOX_SUFFIX` }}",
       "vagrantfile_template": "",
       "vm_name": "osx1011",
       "iso_url": "osx.iso",
+
+      "http_proxy": "{{env `http_proxy`}}",
+      "https_proxy": "{{env `https_proxy`}}",
+      "ftp_proxy": "{{env `ftp_proxy`}}",
+      "rsync_proxy": "{{env `rsync_proxy`}}",
+      "no_proxy": "{{env `no_proxy`}}",
 
       "vmx": "{{ env `VMX` }}"
     }
