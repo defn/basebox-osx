@@ -15,7 +15,6 @@ function main {
     BASEBOX_SUFFIX_TARGET="$BASEBOX_SUFFIX"
   fi
 
-  export VMX="$1"; shift
   exec parity build osx "$@"
 }
 
