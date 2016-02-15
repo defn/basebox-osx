@@ -29,7 +29,7 @@
     "headless": "{{ user `headless` }}",
     "output_directory": "output/{{ user `vm_name` }}-vmware-vmx",
     "shutdown_command": "echo '{{ user `ssh_password` }}'|sudo -S shutdown -h now",
-    "source_path": "{{ user `vmx` }}",
+    "source_path": "{{ user `source`}}",
 
     "skip_compaction": true,
     "tools_upload_flavor": "darwin"
@@ -75,6 +75,8 @@
       "vagrantfile_template": "",
       "vm_name": "osx1011",
       "iso_url": "osx.iso",
+      "iso_checksum": "",
+      "iso_checksum_type": "none",
 
       "http_proxy": "{{env `http_proxy`}}",
       "https_proxy": "{{env `https_proxy`}}",
@@ -82,6 +84,6 @@
       "rsync_proxy": "{{env `rsync_proxy`}}",
       "no_proxy": "{{env `no_proxy`}}",
 
-      "vmx": "{{ env `VMX` }}"
+      "source": "{{env `BASEBOX_SOURCE`}}"
     }
 }
