@@ -219,7 +219,7 @@ function main {
 
   msg_status "On Mavericks and later, the entire modified BaseSystem is our output dmg."
   hdiutil convert -format UDTO -o "$OUTPUT_ISO" "$BASE_SYSTEM_DMG_RW"
-  mv "$OUTPUT_ISO.cdr" "$OUTPUT_ISO"
+  mv "$OUTPUT_ISO.cdr" "${BASEBOX_CACHE}/iso/$OUTPUT_ISO"
   rm -rf "$MNT_ESD" "$SHADOW_FILE"
 
   msg_status "Done. Built image is located at $OUTPUT_ISO. Add this iso and its checksum to your template."
