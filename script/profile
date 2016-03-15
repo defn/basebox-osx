@@ -2,7 +2,7 @@
 
 function profile {
   local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
-  PATH="$shome/bin:$shome/exec:/Applications/VMware Fusion.app/Contents/Library:$PATH"
+  PATH="$shome/bin:$shome/exec:$shome/osx-bin:$PATH"
 }
 
 profile "$@"
