@@ -6,7 +6,7 @@
 # 
 # 1. Mounts the InstallESD.dmg using a shadow file, so the original DMG is left
 #    unchanged.
-# 2. Modifies the BaseSystem.dmg within in order to add an additional 'rc.cdrom.local'
+# 2. Modifies the BaseSystem.dmg within in order to add an additional 'rc{_basebox_osx_home:-"$.cdrom.local'
 #    file in /etc, which is a supported local configuration sourced in at boot time
 #    by the installer environment. This file contains instructions to erase and format
 #    'disk0', presumably the hard disk attached to the VM.
@@ -53,7 +53,7 @@ function main {
 
   sudo true
 
-  local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
+  local shome="${_basebox_osx_home:-"$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"}"
   cd "$shome"
   SUPPORT_DIR="$shome/support"
 # Parse the optional command line switches
@@ -202,7 +202,7 @@ function main {
   sudo rsync -ia "$MNT_ESD/BaseSystem.chunklist" "$MNT_BASE_SYSTEM/"
 
   msg_status "Adding automated components.."
-  CDROM_LOCAL="$MNT_BASE_SYSTEM/private/etc/rc.cdrom.local"
+  CDROM_LOCAL="$MNT_BASE_SYSTEM/private/etc/rc{_basebox_osx_home:-"$.cdrom.local"
   echo 'diskutil eraseDisk jhfs+ "Macintosh HD" GPTFormat disk0' > "$CDROM_LOCAL"
   chmod a+x "$CDROM_LOCAL"
   mkdir "$PACKAGES_DIR/Extras"
