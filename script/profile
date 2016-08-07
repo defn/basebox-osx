@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-function profile {
+function _basebox_osx_profile {
   local shome="$(cd -P -- "${BASH_SOURCE%/*}/.." && pwd -P)"
   PATH="$shome/bin:$shome/exec:$shome/osx-bin:$PATH"
 }
 
-profile "$@"
+_basebox_osx_profile
